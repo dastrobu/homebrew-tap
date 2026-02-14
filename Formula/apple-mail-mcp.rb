@@ -5,23 +5,23 @@
 class AppleMailMcp < Formula
   desc "MCP server providing programmatic access to macOS Mail.app"
   homepage "https://github.com/dastrobu/apple-mail-mcp"
-  version "0.1.0"
+  version "0.2.0"
   license "MIT"
 
   depends_on "go" => :build
   depends_on :macos
 
   if Hardware::CPU.intel?
-    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.1.0/apple-mail-mcp_0.1.0_darwin_amd64.tar.gz"
-    sha256 "b602db97e24e268e1c53dabe9d3557e5787652b1a154cd237eec7604feee0dbd"
+    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.2.0/apple-mail-mcp_0.2.0_darwin_amd64.tar.gz"
+    sha256 "a6e4704f399138631fec2e59bffbaf05a5e53eaa9b0793164539792cdfd38815"
 
     def install
       bin.install "apple-mail-mcp"
     end
   end
   if Hardware::CPU.arm?
-    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.1.0/apple-mail-mcp_0.1.0_darwin_arm64.tar.gz"
-    sha256 "6c3c0715c4618c22c32d3d2b4e6295ace1e6c4690332fc0205469d2e19759d92"
+    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.2.0/apple-mail-mcp_0.2.0_darwin_arm64.tar.gz"
+    sha256 "f020b0729a8473a5c808fd03553ae24bedc706058a41ddc9356030bb1085d207"
 
     def install
       bin.install "apple-mail-mcp"
@@ -82,17 +82,6 @@ class AppleMailMcp < Formula
         • Create a launchd service that starts automatically
         • Grant automation permissions to the binary (not Terminal)
         • Run on HTTP transport (localhost:8787 by default)
-
-      Configuration for Claude Desktop:
-        Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
-
-        {
-          "mcpServers": {
-            "apple-mail": {
-              "url": "http://localhost:8787/mcp/v1"
-            }
-          }
-        }
 
       To remove the launchd service:
         apple-mail-mcp launchd remove
