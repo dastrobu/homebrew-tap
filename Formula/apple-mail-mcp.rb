@@ -5,66 +5,26 @@
 class AppleMailMcp < Formula
   desc "MCP server providing programmatic access to macOS Mail.app"
   homepage "https://github.com/dastrobu/apple-mail-mcp"
-  version "0.2.0"
+  version "0.3.0"
   license "MIT"
 
   depends_on "go" => :build
   depends_on :macos
 
   if Hardware::CPU.intel?
-    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.2.0/apple-mail-mcp_0.2.0_darwin_amd64.tar.gz"
-    sha256 "a6e4704f399138631fec2e59bffbaf05a5e53eaa9b0793164539792cdfd38815"
+    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.3.0/apple-mail-mcp_0.3.0_darwin_amd64.tar.gz"
+    sha256 "bebc234f501aaecaa3cab7d44187931d40805b54c2569cf3c9b438bbbf2aa0b0"
 
     def install
       bin.install "apple-mail-mcp"
     end
   end
   if Hardware::CPU.arm?
-    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.2.0/apple-mail-mcp_0.2.0_darwin_arm64.tar.gz"
-    sha256 "f020b0729a8473a5c808fd03553ae24bedc706058a41ddc9356030bb1085d207"
+    url "https://github.com/dastrobu/apple-mail-mcp/releases/download/v0.3.0/apple-mail-mcp_0.3.0_darwin_arm64.tar.gz"
+    sha256 "a5f678f56702e6edc560f2978d47f259f3bb9dd9647b77570c462b798d90cf75"
 
     def install
       bin.install "apple-mail-mcp"
-    end
-  end
-
-  def post_install
-    # Check if launchd service exists and recreate it after upgrade
-    # This preserves all settings (port, host, debug, RunAtLoad) from the existing plist
-    plist_path = "#{ENV["HOME"]}/Library/LaunchAgents/com.github.dastrobu.apple-mail-mcp.plist"
-    if File.exist?(plist_path)
-      # Read the existing plist to extract settings
-      plist_content = File.read(plist_path)
-
-      # Extract port (default: 8787)
-      port = plist_content.match(/--port=(\d+)/)
-      port_flag = port ? "--port=#{port[1]}" : ""
-
-      # Extract host (default: localhost)
-      host = plist_content.match(/--host=([^\s<]+)/)
-      host_flag = host ? "--host=#{host[1]}" : ""
-
-      # Check if debug is enabled
-      has_debug = plist_content.include?("<string>--debug</string>")
-      debug_flag = has_debug ? "--debug" : ""
-
-      # Check if RunAtLoad is set
-      has_run_at_load = plist_content.include?("<key>RunAtLoad</key>")
-      run_at_load_flag = has_run_at_load ? "" : "--disable-run-at-load"
-
-      # Build command with all flags
-      cmd = ["#{bin}/apple-mail-mcp"]
-      cmd << port_flag unless port_flag.empty?
-      cmd << host_flag unless host_flag.empty?
-      cmd << debug_flag unless debug_flag.empty?
-      cmd << "launchd"
-      cmd << "create"
-      cmd << run_at_load_flag unless run_at_load_flag.empty?
-
-      # Recreate the service preserving all settings
-      system(*cmd.reject(&:empty?))
-
-      ohai "Recreated launchd service with updated binary (preserved existing settings)"
     end
   end
 
@@ -73,28 +33,33 @@ class AppleMailMcp < Formula
       Apple Mail MCP Server has been installed!
 
       ⚠️  IMPORTANT: For proper automation permissions, you should run this server
-      via launchd (not from Terminal directly).
+      via launchd or brew services (not from Terminal directly).
 
-      Setup launchd service (recommended):
+      Option 1: Use Homebrew Services (Standard)
+        brew services start apple-mail-mcp
+
+      Option 2: Use custom launchd service (for custom port/debug)
         apple-mail-mcp launchd create
-
-      This will:
-        • Create a launchd service that starts automatically
-        • Grant automation permissions to the binary (not Terminal)
-        • Run on HTTP transport (localhost:8787 by default)
 
       To remove the launchd service:
         apple-mail-mcp launchd remove
 
       Before uninstalling with 'brew uninstall apple-mail-mcp':
-        1. Stop and remove the launchd service: apple-mail-mcp launchd remove
+        1. Stop and remove the service: brew services stop apple-mail-mcp OR apple-mail-mcp launchd remove
         2. Then run: brew uninstall apple-mail-mcp
-        3. Optionally remove logs: rm -rf ~/Library/Logs/com.github.dastrobu.apple-mail-mcp/
 
       For more information:
         • README: https://github.com/dastrobu/apple-mail-mcp#readme
         • Docs: https://github.com/dastrobu/apple-mail-mcp/tree/main/docs
     EOS
+  end
+
+  service do
+    run [opt_bin/"apple-mail-mcp", "--transport=http"]
+    keep_alive true
+    log_path var/"log/apple-mail-mcp.log"
+    error_log_path var/"log/apple-mail-mcp.err"
+    environment_variables APPLE_MAIL_MCP_PORT: "8787", APPLE_MAIL_MCP_HOST: "localhost"
   end
 
   test do
