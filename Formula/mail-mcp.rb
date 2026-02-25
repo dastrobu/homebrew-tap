@@ -5,32 +5,32 @@
 class MailMcp < Formula
   desc "MCP server providing programmatic access to macOS Mail.app"
   homepage "https://github.com/dastrobu/mail-mcp"
-  version "0.3.0"
+  version "0.4.1"
   license "MIT"
 
   depends_on "go" => :build
   depends_on :macos
 
   if Hardware::CPU.intel?
-    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.3.0/mail-mcp_0.3.0_darwin_amd64.tar.gz"
-    sha256 "bebc234f501aaecaa3cab7d44187931d40805b54c2569cf3c9b438bbbf2aa0b0"
+    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.1/mail-mcp_0.4.1_darwin_amd64.tar.gz"
+    sha256 "1e558e826cfedabce00d8abaf3e9e646db1f8b6b921fe6b190fd35afe8cdfa5a"
 
-    def install
+    define_method(:install) do
       bin.install "mail-mcp"
     end
   end
   if Hardware::CPU.arm?
-    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.3.0/mail-mcp_0.3.0_darwin_arm64.tar.gz"
-    sha256 "a5f678f56702e6edc560f2978d47f259f3bb9dd9647b77570c462b798d90cf75"
+    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.1/mail-mcp_0.4.1_darwin_arm64.tar.gz"
+    sha256 "c1d011e24e38e7c492b61a21ef18bdfca03568beeab12c387c63eb254468c3d4"
 
-    def install
+    define_method(:install) do
       bin.install "mail-mcp"
     end
   end
 
   def caveats
     <<~EOS
-      Mail MCP Server has been installed!
+      Apple Mail MCP Server has been installed!
 
       ⚠️  IMPORTANT: For proper automation permissions, you should run this server
       via launchd or brew services (not from Terminal directly).
@@ -52,14 +52,6 @@ class MailMcp < Formula
         • README: https://github.com/dastrobu/mail-mcp#readme
         • Docs: https://github.com/dastrobu/mail-mcp/tree/main/docs
     EOS
-  end
-
-  service do
-    run [opt_bin/"mail-mcp", "run", "--transport=http"]
-    keep_alive true
-    log_path var/"log/mail-mcp.log"
-    error_log_path var/"log/mail-mcp.err"
-    environment_variables APPLE_MAIL_MCP_PORT: "8787", APPLE_MAIL_MCP_HOST: "localhost"
   end
 
   test do
