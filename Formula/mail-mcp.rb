@@ -13,7 +13,7 @@ class MailMcp < Formula
 
   if Hardware::CPU.intel?
     url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.1/mail-mcp_0.4.1_darwin_amd64.tar.gz"
-    sha256 "1e558e826cfedabce00d8abaf3e9e646db1f8b6b921fe6b190fd35afe8cdfa5a"
+    sha256 "3260fa1117e7091b47f9c0f0f368c78e3fa6eb4982e5c314d58dcebcff57e06d"
 
     define_method(:install) do
       bin.install "mail-mcp"
@@ -21,7 +21,7 @@ class MailMcp < Formula
   end
   if Hardware::CPU.arm?
     url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.1/mail-mcp_0.4.1_darwin_arm64.tar.gz"
-    sha256 "c1d011e24e38e7c492b61a21ef18bdfca03568beeab12c387c63eb254468c3d4"
+    sha256 "753b1b34adf73dafd7e2ebdcd5e526802a6ce9f47108bb21be4bcfcbbd55812c"
 
     define_method(:install) do
       bin.install "mail-mcp"
@@ -52,6 +52,14 @@ class MailMcp < Formula
         • README: https://github.com/dastrobu/mail-mcp#readme
         • Docs: https://github.com/dastrobu/mail-mcp/tree/main/docs
     EOS
+  end
+
+  service do
+    run [opt_bin/"mail-mcp", "run", "--transport=http"]
+    keep_alive true
+    log_path var/"log/mail-mcp.log"
+    error_log_path var/"log/mail-mcp.err"
+    environment_variables APPLE_MAIL_MCP_PORT: "8787", APPLE_MAIL_MCP_HOST: "localhost"
   end
 
   test do
