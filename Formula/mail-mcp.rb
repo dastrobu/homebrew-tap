@@ -5,23 +5,23 @@
 class MailMcp < Formula
   desc "MCP server providing programmatic access to macOS Mail.app"
   homepage "https://github.com/dastrobu/mail-mcp"
-  version "0.4.1"
+  version "0.4.2"
   license "MIT"
 
   depends_on "go" => :build
   depends_on :macos
 
   if Hardware::CPU.intel?
-    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.1/mail-mcp_0.4.1_darwin_amd64.tar.gz"
-    sha256 "3260fa1117e7091b47f9c0f0f368c78e3fa6eb4982e5c314d58dcebcff57e06d"
+    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.2/mail-mcp_0.4.2_darwin_amd64.tar.gz"
+    sha256 "72112badbd15e66eed13a7b4097da86554041211d2b719e15ad7ab1dc19a8ce9"
 
     define_method(:install) do
       bin.install "mail-mcp"
     end
   end
   if Hardware::CPU.arm?
-    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.1/mail-mcp_0.4.1_darwin_arm64.tar.gz"
-    sha256 "753b1b34adf73dafd7e2ebdcd5e526802a6ce9f47108bb21be4bcfcbbd55812c"
+    url "https://github.com/dastrobu/mail-mcp/releases/download/v0.4.2/mail-mcp_0.4.2_darwin_arm64.tar.gz"
+    sha256 "e0dc4b5d21899f7e051b5bb91ab673c2fdd774eabc406d21d5af08f82bf81e47"
 
     define_method(:install) do
       bin.install "mail-mcp"
