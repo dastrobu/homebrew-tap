@@ -10,27 +10,37 @@ brew tap dastrobu/tap
 
 ## Available Formulae
 
-### apple-mail-mcp
+### mail-mcp
 
 MCP server providing programmatic access to macOS Mail.app.
 
 ```bash
-brew install apple-mail-mcp
+brew install mail-mcp
 ```
 
-See the [apple-mail-mcp repository](https://github.com/dastrobu/apple-mail-mcp) for more information.
+See the [mail-mcp repository](https://github.com/dastrobu/mail-mcp) for more information.
+
+### pdf-blick
+
+MCP server for fast, secure PDF inspection and page rendering.
+
+```bash
+brew install pdf-blick
+```
+
+See the [pdf-blick repository](https://github.com/dastrobu/pdf-blick) for more information.
 
 ## Updating
 
 ```bash
 brew update
-brew upgrade apple-mail-mcp
+brew upgrade <formula>
 ```
 
 ## Uninstalling
 
 ```bash
-brew uninstall apple-mail-mcp
+brew uninstall <formula>
 brew untap dastrobu/tap
 ```
 
